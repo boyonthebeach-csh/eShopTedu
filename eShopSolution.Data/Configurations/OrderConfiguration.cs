@@ -1,6 +1,7 @@
 ﻿using eShopSolution.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace eShopSolution.Data.Configurations
 {
@@ -12,11 +13,30 @@ namespace eShopSolution.Data.Configurations
 
             builder.HasKey(x => x.Id);
 
-            builder
-                .Property(x => x.ShipEmail)
+            builder.Property(x => x.ShipEmail)
                 .IsRequired()
                 .IsUnicode()
                 .HasMaxLength(50);
+
+            builder.Property(x => x.Id).UseIdentityColumn();
+
+            builder.Property(x => x.OrderDate).HasDefaultValue(DateTime.Now);
+
+            builder.Property(x => x.ShipAddress)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            builder.Property(x => x.ShipName)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            builder.Property(x => x.ShipPhoneNumber)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            builder.HasOne(x => x.AppUser)
+                .WithMany(x => x.Orders)
+                .HasForeignKey(x => x.UserId);
         }
     }
 }
